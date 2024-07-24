@@ -59,12 +59,15 @@ def send_request(token, id_to_hoc):
     response = requests.post(request_url, json=request_payload, headers=headers)
 
     if response.status_code == 200:
-        print(f'Yêu cầu với id_to_hoc {id_to_hoc} thành công!')
-        print('Phản hồi:', response.json())
+        response_data = response.json().get('data', {})
+        is_thanh_cong = response_data.get('is_thanh_cong', False)
+        thong_bao_loi = response_data.get('thong_bao_loi', '')
+        if is_thanh_cong:
+            messagebox.showinfo("Thành công", f"Đăng ký id_to_hoc {id_to_hoc} thành công!")
+        else:
+            messagebox.showerror("Lỗi", f"Lỗi khi đăng ký id_to_hoc {id_to_hoc}: {thong_bao_loi}")
     else:
-        print(f'Yêu cầu với id_to_hoc {id_to_hoc} thất bại!')
-        print('Mã lỗi:', response.status_code)
-        print('Nội dung:', response.text)
+        messagebox.showerror("Lỗi", f"Yêu cầu với id_to_hoc {id_to_hoc} thất bại!\nMã lỗi: {response.status_code}\nNội dung: {response.text}")
 
 def main(username, password, id_to_hoc_list):
     token = login(username, password)
@@ -110,14 +113,3 @@ submit_button.grid(row=3, column=1, padx=5, pady=5)
 
 # Run the application
 root.mainloop()
-
-# -9063214984120125563
-# -8195424330965486880
-# -9087346277086729313
-
-
-# dad
--7943476537303381398
--4853645518162731312
--8236983540592812276
--8908864137443644868
